@@ -10,7 +10,7 @@
       "projectType": "application",
       "root": "",
       "sourceRoot": "src",
-      "prefix": "app",
+      "prefix": "cg",
       "architect": {
         "build": {
           "builder": "@angular/build:application",
