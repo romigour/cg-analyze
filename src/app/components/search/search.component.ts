@@ -1,8 +1,8 @@
 import {Component, inject, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {InputText} from 'primeng/inputtext';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {Subject, switchMap, tap} from 'rxjs';
+import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
+import {filter, map, merge, Subject, switchMap, tap} from 'rxjs';
 import {CgApiService} from '../../services/cg-api.service';
 import {Card} from "primeng/card";
 import {FloatLabel} from "primeng/floatlabel";
@@ -15,18 +15,19 @@ import {Button} from "primeng/button";
         InputText,
         Card,
         FloatLabel,
-        Button
+        Button,
     ],
     standalone: true,
     template: `
         <p-card styleClass="h-full" header="Recherche">
             <div class="flex gap-4 pt-4">
                 <p-floatlabel variant="on" class="w-full">
-                    <input class="w-full" pInputText id="sessionHandle" [(ngModel)]="sessionHandle"
-                           autocomplete="off"/>
+                    <input #input class="w-full" pInputText id="sessionHandle" minlength="40" maxlength="40" required
+                           #inputModel="ngModel" [(ngModel)]="sessionHandle" autocomplete="off"/>
                     <label for="sessionHandle">Test Session Handle</label>
                 </p-floatlabel>
                 <p-button label="Charger" icon="pi pi-search" iconPos="left"
+                          [disabled]="inputModel.invalid"
                           [loading]="loading()" (click)="loadHistory$$.next()"/>
             </div>
         </p-card>
@@ -36,17 +37,21 @@ import {Button} from "primeng/button";
 })
 export class SearchComponent {
     // public sessionHandle = signal('7083325461e3689408098a523504154a30867fe7');
-    public sessionHandle = signal('6848817770ddc0518280ded68f453b0159ab6310');
-    protected readonly loadHistory$$ = new Subject<void>();
+    protected sessionHandle = signal(null);
 
-    protected readonly loading = signal(false);
+    protected readonly loadHistory$$ = new Subject<void>();
     readonly #cgApiService = inject(CgApiService);
+    protected readonly loading = toSignal(merge(
+        this.loadHistory$$.pipe(map(() => true)),
+        this.#cgApiService.battles$.pipe(map(() => false)),
+    ), {initialValue: false});
 
     constructor() {
         this.loadHistory$$.pipe(
-            tap(() => this.loading.set(true)),
-            switchMap(() => this.#cgApiService.loadHistory(this.sessionHandle())
-                .pipe(tap(() => this.#cgApiService.updateParams({})), tap(() => this.loading.set(false)))),
+            map(() => this.sessionHandle()),
+            filter(Boolean),
+            switchMap((sessionHandle) => this.#cgApiService.loadHistory(sessionHandle)
+                .pipe(tap(() => this.#cgApiService.updateParams({})))),
             takeUntilDestroyed(),
         ).subscribe();
     }

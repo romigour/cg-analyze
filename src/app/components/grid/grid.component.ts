@@ -17,11 +17,13 @@ import {map} from "rxjs";
             <ng-template #header>
                 <tr>
                     <th>GameId</th>
+                    <th>Joueur</th>
                 </tr>
             </ng-template>
             <ng-template #body let-battles>
                 <tr>
                     <td>{{ battles.gameId }}</td>
+                    <td>{{ battles.players[0].nickname }}</td>
                 </tr>
             </ng-template>
         </p-table>
