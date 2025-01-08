@@ -12,14 +12,14 @@ import {invoke} from "@tauri-apps/api/core";
         FormsModule,
         SearchComponent,
         GridComponent,
-        TopbarComponent,
     ],
     template: `
-        <cg-topbar></cg-topbar>
-       <cg-search></cg-search>
-       <cg-grid></cg-grid>
-        
-        {{greetingMessage}}
+        <div class="flex flex-col h-full gap-4">
+            <h1>CG Analyze</h1>
+            <cg-search></cg-search>
+            <cg-grid></cg-grid>
+            {{greetingMessage}}
+        </div>
     `,
     styles: `
     `
@@ -28,15 +28,15 @@ export class HomeComponent {
 
     greetingMessage = "";
 
-    greet(name: string): void {
+    loadHistoryBattles(sessionHandle: string): void {
 
         // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-        invoke<string>("greet", {name}).then((text) => {
+        invoke<string>("load_history_battles", {sessionHandle}).then((text) => {
             this.greetingMessage = text;
         });
     }
 
     constructor() {
-        this.greet('Romain');
+        //this.loadHistoryBattles('Romain');
     }
 }

@@ -1,11 +1,17 @@
 # CG Analyze
 
+Projet d'analyse des matchs codingame
+- Framework: Tauri, Angular,
+- Language: Rust, Typescript, SCSS, HTML
+
 ## Local dev
 
-`npm run tauri dev`
+Nécessaire: Node.js, npm, rust, cargo
 
+Installer les dépendances: `npm install`
 
-## Project with Tauri + Angular
+Lancer l'application complète: `npm run tauri dev`
+Lancer uniquement l'ihm angular: `npm start`
 
 
 ### Update angular
