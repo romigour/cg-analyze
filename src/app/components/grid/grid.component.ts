@@ -1,6 +1,9 @@
-import {Component} from '@angular/core';
+import {Component, computed, inject} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {TableModule} from "primeng/table";
+import {toSignal} from "@angular/core/rxjs-interop";
+import {CgApiService} from "../../services/cg-api.service";
+import {map} from "rxjs";
 
 @Component({
     selector: 'cg-grid',
@@ -10,21 +13,15 @@ import {TableModule} from "primeng/table";
         TableModule
     ],
     template: `
-        <p-table [value]="test" [tableStyle]="{ 'min-width': '50rem' }">
+        <p-table [value]="battles()" [tableStyle]="{ 'min-width': '50rem' }" [loading]="loading()">
             <ng-template #header>
                 <tr>
-                    <th>Nom</th>
-                    <th>Prenom</th>
-                    <th>Adresse</th>
-                    <th>Age</th>
+                    <th>GameId</th>
                 </tr>
             </ng-template>
-            <ng-template #body let-test>
+            <ng-template #body let-battles>
                 <tr>
-                    <td>{{ test.nom }}</td>
-                    <td>{{ test.prenom }}</td>
-                    <td>{{ test.adresse }}</td>
-                    <td>{{ test.age }}</td>
+                    <td>{{ battles.gameId }}</td>
                 </tr>
             </ng-template>
         </p-table>
@@ -43,4 +40,16 @@ export class GridComponent {
         {nom: 'Toto', prenom: 'Titi', adresse: '16 rue de la cote', age: '21'},
         {nom: 'Toto', prenom: 'Titi', adresse: '16 rue de la cote', age: '21'},
     ]
+    readonly #cgApiService = inject(CgApiService);
+    readonly #battlesState = toSignal(
+        this.#cgApiService.battles$
+            .pipe(
+                map((battles) => (
+                    {loading: false, battles: battles})),
+            ),
+        {initialValue: {loading: false, battles: []}},
+    );
+
+    protected readonly loading = computed(() => this.#battlesState().loading);
+    protected readonly battles = computed(() => this.#battlesState().battles);
 }

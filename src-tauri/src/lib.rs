@@ -1,4 +1,5 @@
 mod commands;
+mod structs;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -6,7 +7,8 @@ pub fn run() {
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
             commands::greet,
-            commands::load_history_battles,
+            commands::load_history,
+            commands::search,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

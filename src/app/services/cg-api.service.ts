@@ -1,25 +1,39 @@
-import {inject, Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {Injectable, signal} from '@angular/core';
+import {from, Observable, shareReplay, switchMap, tap} from 'rxjs';
+import {invoke} from "@tauri-apps/api/core";
+import {toObservable} from "@angular/core/rxjs-interop";
+import {Battle} from "../models/battle";
+
+const initialSearchParams = {
+    searchTerm: '',
+    page: 0,
+    size: 10,
+};
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class CgApiService {
+    protected readonly searchParams = signal({...initialSearchParams});
 
-  private httpClient = inject(HttpClient);
-  private readonly HOSTNAME = 'https://www.codingame.com/';
+    public readonly battles$ = toObservable(this.searchParams).pipe(
+        switchMap(({searchTerm, page, size}) => this.search()),
+        shareReplay(1),
+    );
 
-  constructor() {}
+    loadHistory(sessionHandle: string): Observable<string> {
+        return from(invoke<string>("load_history", {sessionHandle}));
+    }
 
-  search(value: string): Observable<any> {
-    const body = ['71013009dcb6cdb2943f7e27053be4f21f50501b', null];
+    search(): Observable<Array<Battle>> {
+        return from(invoke<any>("search")).pipe(tap(console.log));
+    }
 
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
+    public updateParams(curr: Partial<{ searchTerm: string; page: number; size: number; }>): void {
+        this.searchParams.update((prev) => ({...prev, ...curr}));
+    }
 
-    return this.httpClient.post(`http://localhost:4200/services/gamesPlayersRanking/findLastBattlesByTestSessionHandle`,
-      body, { headers, withCredentials: true });
-  }
+    public clearParams(): void {
+        this.searchParams.set({...initialSearchParams});
+    }
 }
