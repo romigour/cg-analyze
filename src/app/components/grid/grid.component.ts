@@ -48,12 +48,14 @@ import {CodingameService} from '../../services/codingame.service';
                             }
                         </div>
                     </td>
-                    <td style="text-align: center">
-                        @if (result.position === 0) {
-                            <img class="cursor-pointer" src="assets/icons/win.png" width="16" height="16" priority>
-                        } @else {
-                            {{ result.position }}
-                        }
+                    <td>
+                        <div class="flex justify-center w-full">
+                            @if (result.position === 1) {
+                                <img class="cursor-pointer" src="assets/icons/win.png" width="16" height="16" priority>
+                            } @else {
+                                {{ result.position }}
+                            }
+                        </div>
                     </td>
                     <td>
                         <div class="flex flex-col">
@@ -80,8 +82,10 @@ import {CodingameService} from '../../services/codingame.service';
                     </td>
                     <td style="text-align: center">{{ result.ecartScore }}</td>
                     <td>
-                        <img class="cursor-pointer" src="assets/icons/open_link.png" width="16" height="16"
-                             (click)="openReplay(result.idGame)" priority>
+                        <div class="flex justify-center w-full">
+                            <img class="cursor-pointer" src="assets/icons/open_link.png" width="16" height="16"
+                                 (click)="openReplay(result.idGame)" priority>
+                        </div>
                     </td>
                 </tr>
             </ng-template>
