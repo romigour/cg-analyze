@@ -1,8 +1,6 @@
-import {Injectable, signal} from '@angular/core';
-import { from, Observable, shareReplay, Subject, switchMap, tap } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {from, Observable, Subject, tap} from 'rxjs';
 import {invoke} from "@tauri-apps/api/core";
-import {toObservable} from "@angular/core/rxjs-interop";
-import {Battle} from "../models/battle";
 
 const initialSearchParams = {
     searchTerm: '',
@@ -17,7 +15,8 @@ export class CodingameService {
 
     public readonly update$$ = new Subject<void>();
 
-    loadHistory(sessionHandle: string): Observable<string> {
-        return from(invoke<string>("load_history", {sessionHandle})).pipe(tap(() => this.update$$.next()));
+    loadHistory(sessionHandle: string): Observable<void> {
+        return from(invoke<string>("load_history", {sessionHandle}).then(() => console.log('AloadHistory')))
+            .pipe(tap(() => console.log('loadHistory')), tap(() => this.update$$.next()));
     }
 }

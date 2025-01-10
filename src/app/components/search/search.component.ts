@@ -2,12 +2,12 @@ import {Component, inject, signal} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {InputText} from 'primeng/inputtext';
 import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
-import {filter, map, merge, Subject, switchMap, tap} from 'rxjs';
+import {filter, map, merge, Subject, switchMap} from 'rxjs';
 import {CodingameService} from '../../services/codingame.service';
 import {Card} from "primeng/card";
 import {FloatLabel} from "primeng/floatlabel";
 import {Button} from "primeng/button";
-import { SearchService } from '../../services/search.service';
+import {SearchService} from '../../services/search.service';
 
 @Component({
     selector: 'cg-search',

@@ -1,11 +1,16 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Debug, Clone)]
+#[derive(Deserialize, Serialize, Default, Debug, Clone)]
 pub struct Information {
     pub pseudo: String,
-    pub total_game: u32,
-    pub total_win: u32,
-    pub total_draw: u32,
-    pub total_lost: u32,
-    pub total_timeout: u32,
+    #[serde(rename = "totalGame")]
+    pub total_game: usize,
+    #[serde(rename = "totalWin")]
+    pub total_win: usize,
+    #[serde(rename = "totalDraw")]
+    pub total_draw: usize,
+    #[serde(rename = "totalLost")]
+    pub total_lost: usize,
+    #[serde(rename = "totalTimeout")]
+    pub total_timeout: usize,
 }

@@ -22,7 +22,7 @@ export class SearchService {
     );
 
     search(): Observable<Array<Battle>> {
-        return from(invoke<any>("search")).pipe(tap(console.log));
+        return from(invoke<any>("search")).pipe(tap((result) => console.log('search ', result)));
     }
 
     public updateParams(curr: Partial<{ searchTerm: string; page: number; size: number; }>): void {

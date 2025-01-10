@@ -1,10 +1,10 @@
 import {Component, computed, inject} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {TableModule} from "primeng/table";
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { map, switchMap, tap } from 'rxjs';
-import { SearchService } from '../../services/search.service';
-import { CodingameService } from '../../services/codingame.service';
+import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
+import {map, tap} from 'rxjs';
+import {SearchService} from '../../services/search.service';
+import {CodingameService} from '../../services/codingame.service';
 
 @Component({
     selector: 'cg-grid',
@@ -35,6 +35,7 @@ import { CodingameService } from '../../services/codingame.service';
 export class GridComponent {
     readonly #codingameService = inject(CodingameService);
     readonly #searchService = inject(SearchService);
+    readonly updateCg$ = this.#codingameService.update$$.pipe(tap(() => this.#searchService.updateParams({})));
     readonly #battlesState = toSignal(
         this.#searchService.battles$
             .pipe(
@@ -43,9 +44,6 @@ export class GridComponent {
             ),
         {initialValue: {loading: false, battles: []}},
     );
-
-    readonly updateCg$ = this.#codingameService.update$$.pipe(tap(() => this.#searchService.updateParams({})));
-
     protected readonly loading = computed(() => this.#battlesState().loading);
     protected readonly battles = computed(() => this.#battlesState().battles);
 

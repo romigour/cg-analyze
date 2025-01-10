@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "cg-analyze",
+        "title": "CG Analyze",
         "width": 800,
         "height": 600
       }

@@ -1,5 +1,6 @@
 use crate::structs::codingame::battle::Battle;
 use crate::structs::codingame::game::Game;
+use crate::structs::codingame::player::Player;
 use once_cell::sync::Lazy;
 use reqwest::Client;
 use serde_json::json;
@@ -7,27 +8,16 @@ use std::error::Error;
 use std::sync::Mutex;
 use tauri::command;
 
-pub  static BATTLES: Lazy<Mutex<Vec<Battle>>> = Lazy::new(|| Mutex::new(Vec::new()));
-pub static SESSION_HANDLE: Lazy<Mutex<String>> = Lazy::new(|| Mutex::new(String::from("")));
+pub static BATTLES: Lazy<Mutex<Vec<Battle>>> = Lazy::new(|| Mutex::new(Vec::new()));
+pub static CURRENT_PLAYER: Lazy<Mutex<Option<Player>>> = Lazy::new(|| Mutex::new(None));
 
 #[command]
 pub fn load_history(session_handle: &str) -> Result<(), String> {
-    let mut session_handle_g = SESSION_HANDLE.lock().unwrap();
-    *session_handle_g = String::from(session_handle);
-
     tokio::runtime::Runtime::new()
         .unwrap()
         .block_on(fetch_battles(session_handle))
         .map_err(|e| e.to_string())
 }
-
-#[command]
-pub fn search() -> Vec<Battle> {
-    let battles = BATTLES.lock().unwrap();
-    println!("search {:?}", battles.len());
-    battles.clone()
-}
-
 
 async fn fetch_battles(session_handle: &str) -> Result<(), Box<dyn Error>> {
     println!("Fetching battles...");
@@ -69,6 +59,17 @@ async fn fetch_battles(session_handle: &str) -> Result<(), Box<dyn Error>> {
                 ecart_score: battle.ecart_score,
             });
         }
+
+        let mut player = CURRENT_PLAYER.lock().unwrap();
+        *player = battles
+            .first()
+            .map(|battle| {
+                battle.players.clone()
+                    .into_iter()
+                    .find(|player| player.test_session_handle == session_handle)
+            })
+            .flatten();
+
         println!("Battles loaded.");
         Ok(())
     } else {
