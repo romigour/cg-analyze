@@ -1,6 +1,10 @@
-import {Component} from '@angular/core';
+import { Component, inject } from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {Card} from "primeng/card";
+import { InformationService } from '../../services/information.service';
+import { tap } from 'rxjs';
+import { CodingameService } from '../../services/codingame.service';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
     selector: 'cg-information',
@@ -40,4 +44,12 @@ import {Card} from "primeng/card";
     `
 })
 export class InformationComponent {
+    readonly #codingameService = inject(CodingameService);
+    readonly #informationService = inject(InformationService);
+
+    readonly updateCg$ = this.#codingameService.update$$.pipe(tap(() => this.#informationService.getInformation()));
+
+    constructor() {
+        this.updateCg$.pipe(takeUntilDestroyed()).subscribe()
+    }
 }

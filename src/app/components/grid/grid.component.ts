@@ -1,9 +1,10 @@
 import {Component, computed, inject} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {TableModule} from "primeng/table";
-import {toSignal} from "@angular/core/rxjs-interop";
-import {CgApiService} from "../../services/cg-api.service";
-import {map} from "rxjs";
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { map, switchMap, tap } from 'rxjs';
+import { SearchService } from '../../services/search.service';
+import { CodingameService } from '../../services/codingame.service';
 
 @Component({
     selector: 'cg-grid',
@@ -32,19 +33,10 @@ import {map} from "rxjs";
     `
 })
 export class GridComponent {
-    readonly test = [
-        {nom: 'Toto', prenom: 'Titi', adresse: '16 rue de la cote', age: '21'},
-        {nom: 'Toto', prenom: 'Titi', adresse: '16 rue de la cote', age: '21'},
-        {nom: 'Toto', prenom: 'Titi', adresse: '16 rue de la cote', age: '21'},
-        {nom: 'Toto', prenom: 'Titi', adresse: '16 rue de la cote', age: '21'},
-        {nom: 'Toto', prenom: 'Titi', adresse: '16 rue de la cote', age: '21'},
-        {nom: 'Toto', prenom: 'Titi', adresse: '16 rue de la cote', age: '21'},
-        {nom: 'Toto', prenom: 'Titi', adresse: '16 rue de la cote', age: '21'},
-        {nom: 'Toto', prenom: 'Titi', adresse: '16 rue de la cote', age: '21'},
-    ]
-    readonly #cgApiService = inject(CgApiService);
+    readonly #codingameService = inject(CodingameService);
+    readonly #searchService = inject(SearchService);
     readonly #battlesState = toSignal(
-        this.#cgApiService.battles$
+        this.#searchService.battles$
             .pipe(
                 map((battles) => (
                     {loading: false, battles: battles})),
@@ -52,6 +44,12 @@ export class GridComponent {
         {initialValue: {loading: false, battles: []}},
     );
 
+    readonly updateCg$ = this.#codingameService.update$$.pipe(tap(() => this.#searchService.updateParams({})));
+
     protected readonly loading = computed(() => this.#battlesState().loading);
     protected readonly battles = computed(() => this.#battlesState().battles);
+
+    constructor() {
+        this.updateCg$.pipe(takeUntilDestroyed()).subscribe();
+    }
 }

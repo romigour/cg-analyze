@@ -9,6 +9,7 @@ pub fn run() {
             commands::greet,
             commands::load_history,
             commands::search,
+            commands::get_information,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

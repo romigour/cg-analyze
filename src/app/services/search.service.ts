@@ -13,17 +13,13 @@ const initialSearchParams = {
 @Injectable({
     providedIn: 'root'
 })
-export class CgApiService {
+export class SearchService {
     protected readonly searchParams = signal({...initialSearchParams});
 
     public readonly battles$ = toObservable(this.searchParams).pipe(
         switchMap(({searchTerm, page, size}) => this.search()),
         shareReplay(1),
     );
-
-    loadHistory(sessionHandle: string): Observable<string> {
-        return from(invoke<string>("load_history", {sessionHandle}));
-    }
 
     search(): Observable<Array<Battle>> {
         return from(invoke<any>("search")).pipe(tap(console.log));

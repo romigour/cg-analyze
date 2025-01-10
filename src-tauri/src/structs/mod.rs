@@ -1,6 +1,2 @@
-pub mod battle;
-pub mod player;
-pub mod game;
-pub mod frame;
-pub mod agent;
-pub mod codingamer;
+pub mod information;
+pub mod codingame;

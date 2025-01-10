@@ -1,5 +1,5 @@
-use crate::structs::agent::Agent;
-use crate::structs::frame::Frame;
+use crate::structs::codingame::agent::Agent;
+use crate::structs::codingame::frame::Frame;
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Debug, Clone)]

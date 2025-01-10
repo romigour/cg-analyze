@@ -1,5 +1,5 @@
-use crate::structs::game::Game;
-use crate::structs::player::Player;
+use crate::structs::codingame::game::Game;
+use crate::structs::codingame::player::Player;
 use serde::{Deserialize, Serialize};
 
 #[derive(Deserialize, Serialize, Clone, Debug)]

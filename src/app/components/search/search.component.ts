@@ -3,10 +3,11 @@ import {FormsModule} from '@angular/forms';
 import {InputText} from 'primeng/inputtext';
 import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
 import {filter, map, merge, Subject, switchMap, tap} from 'rxjs';
-import {CgApiService} from '../../services/cg-api.service';
+import {CodingameService} from '../../services/codingame.service';
 import {Card} from "primeng/card";
 import {FloatLabel} from "primeng/floatlabel";
 import {Button} from "primeng/button";
+import { SearchService } from '../../services/search.service';
 
 @Component({
     selector: 'cg-search',
@@ -36,22 +37,22 @@ import {Button} from "primeng/button";
     `
 })
 export class SearchComponent {
-    // public sessionHandle = signal('7083325461e3689408098a523504154a30867fe7');
-    protected sessionHandle = signal(null);
+    public sessionHandle = signal('7083325461e3689408098a523504154a30867fe7');
+    // protected sessionHandle = signal(null);
 
     protected readonly loadHistory$$ = new Subject<void>();
-    readonly #cgApiService = inject(CgApiService);
+    readonly #codingameService = inject(CodingameService);
+    readonly #searchService = inject(SearchService);
     protected readonly loading = toSignal(merge(
         this.loadHistory$$.pipe(map(() => true)),
-        this.#cgApiService.battles$.pipe(map(() => false)),
+        this.#searchService.battles$.pipe(map(() => false)),
     ), {initialValue: false});
 
     constructor() {
         this.loadHistory$$.pipe(
             map(() => this.sessionHandle()),
             filter(Boolean),
-            switchMap((sessionHandle) => this.#cgApiService.loadHistory(sessionHandle)
-                .pipe(tap(() => this.#cgApiService.updateParams({})))),
+            switchMap((sessionHandle) => this.#codingameService.loadHistory(sessionHandle)),
             takeUntilDestroyed(),
         ).subscribe();
     }

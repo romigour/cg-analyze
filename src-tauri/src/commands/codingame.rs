@@ -1,5 +1,5 @@
-use crate::structs::battle::Battle;
-use crate::structs::game::Game;
+use crate::structs::codingame::battle::Battle;
+use crate::structs::codingame::game::Game;
 use once_cell::sync::Lazy;
 use reqwest::Client;
 use serde_json::json;
@@ -7,10 +7,14 @@ use std::error::Error;
 use std::sync::Mutex;
 use tauri::command;
 
-static BATTLES: Lazy<Mutex<Vec<Battle>>> = Lazy::new(|| Mutex::new(Vec::new()));
+pub  static BATTLES: Lazy<Mutex<Vec<Battle>>> = Lazy::new(|| Mutex::new(Vec::new()));
+pub static SESSION_HANDLE: Lazy<Mutex<String>> = Lazy::new(|| Mutex::new(String::from("")));
 
 #[command]
 pub fn load_history(session_handle: &str) -> Result<(), String> {
+    let mut session_handle_g = SESSION_HANDLE.lock().unwrap();
+    *session_handle_g = String::from(session_handle);
+
     tokio::runtime::Runtime::new()
         .unwrap()
         .block_on(fetch_battles(session_handle))
