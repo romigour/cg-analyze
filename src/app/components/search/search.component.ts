@@ -37,7 +37,8 @@ import {SearchService} from '../../services/search.service';
     `
 })
 export class SearchComponent {
-    public sessionHandle = signal('7083325461e3689408098a523504154a30867fe7');
+    public sessionHandle = signal('6848817770ddc0518280ded68f453b0159ab6310'); // hypersonic
+    // public sessionHandle = signal('3372496499d74e5b906d6cf10a15e9e6b81a4b70'); // fall challenge 2020
     // protected sessionHandle = signal(null);
 
     protected readonly loadHistory$$ = new Subject<void>();
@@ -45,7 +46,7 @@ export class SearchComponent {
     readonly #searchService = inject(SearchService);
     protected readonly loading = toSignal(merge(
         this.loadHistory$$.pipe(map(() => true)),
-        this.#searchService.battles$.pipe(map(() => false)),
+        this.#searchService.resultGame$.pipe(map(() => false)),
     ), {initialValue: false});
 
     constructor() {

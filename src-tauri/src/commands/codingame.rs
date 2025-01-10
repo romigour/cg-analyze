@@ -21,7 +21,8 @@ pub fn load_history(session_handle: &str) -> Result<(), String> {
 
 async fn fetch_battles(session_handle: &str) -> Result<(), Box<dyn Error>> {
     println!("Fetching battles...");
-    let url = "https://www.codingame.com/services/gamesPlayersRanking/findLastBattlesByTestSessionHandle";
+    let url =
+        "https://www.codingame.com/services/gamesPlayersRanking/findLastBattlesByTestSessionHandle";
     let body = json!([session_handle, null]);
     let client = Client::new();
     let response = client.post(url).json(&body).send().await?;
@@ -50,13 +51,21 @@ async fn fetch_battles(session_handle: &str) -> Result<(), Box<dyn Error>> {
         let mut battles = BATTLES.lock().unwrap();
         battles.clear();
 
-        for battle in updated_battles.iter() {
+        let size_battles = updated_battles.len();
+        println!("size {:?}", size_battles);
+        for (i, battle) in updated_battles.iter().enumerate() {
+            let idx = size_battles - i;
+
+            let scores = battle.game.clone().unwrap().scores;
+            let ecart_score = (scores[0] - scores[1]).abs();
+
             battles.push(Battle {
                 game_id: battle.game_id,
                 players: battle.players.clone(),
                 done: battle.done,
                 game: battle.game.clone(),
-                ecart_score: battle.ecart_score,
+                idx_game: Option::from(idx as i32),
+                ecart_score: Some(ecart_score),
             });
         }
 
@@ -64,7 +73,9 @@ async fn fetch_battles(session_handle: &str) -> Result<(), Box<dyn Error>> {
         *player = battles
             .first()
             .map(|battle| {
-                battle.players.clone()
+                battle
+                    .players
+                    .clone()
                     .into_iter()
                     .find(|player| player.test_session_handle == session_handle)
             })
@@ -77,7 +88,7 @@ async fn fetch_battles(session_handle: &str) -> Result<(), Box<dyn Error>> {
     }
 }
 
-async fn fetch_game_data(game_id: u64) -> Result<Game, Box<dyn Error>> {
+async fn fetch_game_data(game_id: u32) -> Result<Game, Box<dyn Error>> {
     let url = "https://www.codingame.com/services/gameResultRemoteService/findByGameId";
     let body = json!([game_id.to_string().as_str(), null]);
 
@@ -86,9 +97,12 @@ async fn fetch_game_data(game_id: u64) -> Result<Game, Box<dyn Error>> {
 
     if response.status().is_success() {
         let game: Game = response.json().await?;
+        println!("Game: {:?} -> {:?}", game.game_id, game.agents);
         Ok(game)
     } else {
-        Err(Box::new(std::io::Error::new(std::io::ErrorKind::Other, "Failed to fetch game data")))
+        Err(Box::new(std::io::Error::new(
+            std::io::ErrorKind::Other,
+            "Failed to fetch game data",
+        )))
     }
 }
-

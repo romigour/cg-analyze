@@ -8,6 +8,6 @@ pub struct Agent {
     #[serde(rename = "agentId")]
     pub agent_id: u64,
     pub score: f64,
-    pub rank: Option<u64>,
+    pub rank: Option<u32>,
     pub valid: bool,
 }

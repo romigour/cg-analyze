@@ -6,9 +6,11 @@ use serde::{Deserialize, Serialize};
 pub struct Battle {
     pub players: Vec<Player>,
     #[serde(rename = "gameId")]
-    pub game_id: u64,
+    pub game_id: u32,
     pub done: bool,
     pub game: Option<Game>,
+    #[serde(rename = "idxGame")]
+    pub idx_game: Option<i32>,
     #[serde(rename = "ecartScore")]
     pub ecart_score: Option<f64>,
 }
