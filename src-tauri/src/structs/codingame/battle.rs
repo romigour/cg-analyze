@@ -11,6 +11,4 @@ pub struct Battle {
     pub game: Option<Game>,
     #[serde(rename = "idxGame")]
     pub idx_game: Option<i32>,
-    #[serde(rename = "ecartScore")]
-    pub ecart_score: Option<f64>,
 }

@@ -8,5 +8,5 @@ pub struct Frame {
     pub stderr: Option<String>,
     pub summary: Option<String>,
     #[serde(rename = "agentId")]
-    pub agent_id: i64,
+    pub agent_id: i32,
 }

@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Deserialize, Serialize, Default, Debug, Clone)]
+#[derive(Deserialize, Serialize, Default, Debug, Clone, PartialEq)]
 pub enum Status {
     #[default]
     Lost,
@@ -8,4 +8,5 @@ pub enum Status {
     Draw,
     Timeout,
     Warning,
+    All,
 }

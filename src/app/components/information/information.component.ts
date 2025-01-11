@@ -16,7 +16,7 @@ import {NgClass} from "@angular/common";
     ],
     standalone: true,
     template: `
-        <p-card styleClass="h-full overflow-auto" header="Informations">
+        <p-card styleClass="h-full overflow-auto" header="Information">
             @if (information(); as information) {
                 <div class="flex justify-between w-full">
                     <div class="form-field">

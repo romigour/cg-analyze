@@ -37,8 +37,9 @@ import {SearchService} from '../../services/search.service';
     `
 })
 export class SearchComponent {
-    public sessionHandle = signal('6848817770ddc0518280ded68f453b0159ab6310'); // hypersonic
-    // public sessionHandle = signal('3372496499d74e5b906d6cf10a15e9e6b81a4b70'); // fall challenge 2020
+    public sessionHandle = signal('71012444150d8e415898f413d3f9e1d19da3341c'); // cellulerana Doudou
+    // public sessionHandle = signal('6848817770ddc0518280ded68f453b0159ab6310'); // hypersonic Romi
+    // public sessionHandle = signal('3372496499d74e5b906d6cf10a15e9e6b81a4b70'); // fall challenge 2020 Romi
     // protected sessionHandle = signal(null);
 
     protected readonly loadHistory$$ = new Subject<void>();

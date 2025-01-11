@@ -5,91 +5,94 @@ import {takeUntilDestroyed, toSignal} from '@angular/core/rxjs-interop';
 import {map, tap} from 'rxjs';
 import {SearchService} from '../../services/search.service';
 import {CodingameService} from '../../services/codingame.service';
+import {TruncateNumberPipe} from "../pipes/truncate-number";
 
 @Component({
     selector: 'cg-grid',
     standalone: true,
     imports: [
         FormsModule,
-        TableModule
+        TableModule,
+        TruncateNumberPipe
     ],
     template: `
-        <p-table [value]="resultGame()" [scrollable]="true"
-                 [tableStyle]="{ 'min-width': '50rem', 'text-align': 'center' }"
-                 [loading]="loading()">
-            <ng-template #header>
-                <tr>
-                    <th>#</th>
-                    <th style="text-align: center">Statut</th>
-                    <th style="text-align: center">Position</th>
-                    <th style="text-align: center">Pseudo</th>
-                    <th style="text-align: center">Classement</th>
-                    <th style="text-align: center">Elo</th>
-                    <th style="text-align: center">Ecart score</th>
-                    <th width="80px" style="text-align: center">Actions</th>
-                </tr>
-            </ng-template>
-            <ng-template #body let-result>
-                <tr>
-                    <td>{{ result.idxGame }}</td>
-                    <td style="text-align: center">
-                        <div class="w-full flex justify-center">
-                            @if (result.status === 'Win') {
-                                <img class="cursor-pointer" src="assets/icons/valid.png" width="16"
-                                     height="16" priority>
-                            } @else if (result.status === 'Timeout') {
-                                <img class="cursor-pointer" src="assets/icons/timeout.png" width="16" height="16"
-                                     priority>
-                            } @else if (result.status === 'Warning') {
-                                <img class="cursor-pointer" src="assets/icons/warning.png" width="16" height="16"
-                                     priority>
-                            } @else {
-                                <img class="cursor-pointer" src="assets/icons/lost.png" width="16" height="16" priority>
-                            }
-                        </div>
-                    </td>
-                    <td>
-                        <div class="flex justify-center w-full">
-                            @if (result.position === 1) {
-                                <img class="cursor-pointer" src="assets/icons/win.png" width="16" height="16" priority>
-                            } @else {
-                                {{ result.position }}
-                            }
-                        </div>
-                    </td>
-                    <td>
-                        <div class="flex flex-col">
-                            @for (opposant of result.opposants; track $index) {
-                                <div>{{ opposant.pseudo }}</div>
-                            }
-                        </div>
-                    </td>
-                    <td style="text-align: center">
-                        <div class="flex flex-col">
-                            @for (opposant of result.opposants; track $index) {
-                                <div>{{ opposant.rank }}</div>
-                            }
-                        </div>
-                    </td>
-                    <td style="text-align: center">
-                        <div class="flex flex-col">
-                            @for (opposant of result.opposants; track $index) {
-                                <div>
-                                    {{ opposant.score }}
-                                </div>
-                            }
-                        </div>
-                    </td>
-                    <td style="text-align: center">{{ result.ecartScore }}</td>
-                    <td>
-                        <div class="flex justify-center w-full">
+        <div class="h-full">
+            <p-table [value]="resultGame()" [scrollable]="true" [scrollHeight]="'100%'"
+                     [tableStyle]="{ 'min-width': '50rem', 'text-align': 'center' }"
+                     [loading]="loading()">
+                <ng-template #header>
+                    <tr>
+                        <th>#</th>
+                        <th style="text-align: center">Statut</th>
+                        <th style="text-align: center">Position</th>
+                        <th style="text-align: center">Pseudo</th>
+                        <th style="text-align: center">Classement</th>
+                        <th style="text-align: center">Elo</th>
+                        <th style="text-align: center">Ecart score</th>
+                        <th style="width: 50px"></th>
+                    </tr>
+                </ng-template>
+                <ng-template #body let-result>
+                    <tr>
+                        <td>{{ result.idxGame }}</td>
+                        <td style="text-align: center">
+                            <div class="w-full flex justify-center gap-2">
+                                @if (result.status === 'Win') {
+                                    <img src="assets/icons/valid.png" width="16" height="16" priority>
+                                } @else if (result.status === 'Timeout') {
+                                    <img src="assets/icons/timeout.png" width="16" height="16" priority>
+                                } @else if (result.status === 'Warning') {
+                                    <img src="assets/icons/warning.png" width="16" height="16" priority>
+                                } @else {
+                                    <img src="assets/icons/lost.png" width="16" height="16" priority>
+                                }
+                                @if (result.warning) {
+                                    <img src="assets/icons/warning.png" width="16" height="16" priority>
+                                }
+                            </div>
+                        </td>
+                        <td>
+                            <div class="flex justify-center w-full">
+                                @if (result.position === 1) {
+                                    <img class="cursor-pointer" src="assets/icons/win.png" width="16" height="16"
+                                         priority>
+                                } @else {
+                                    {{ result.position }}
+                                }
+                            </div>
+                        </td>
+                        <td>
+                            <div class="flex flex-col">
+                                @for (opposant of result.opposants; track $index) {
+                                    <div>{{ opposant.pseudo }}</div>
+                                }
+                            </div>
+                        </td>
+                        <td style="text-align: center">
+                            <div class="flex flex-col">
+                                @for (opposant of result.opposants; track $index) {
+                                    <div>{{ opposant.rank }}</div>
+                                }
+                            </div>
+                        </td>
+                        <td style="text-align: center">
+                            <div class="flex flex-col">
+                                @for (opposant of result.opposants; track $index) {
+                                    <div>
+                                        {{ opposant.score | truncateNumber }}
+                                    </div>
+                                }
+                            </div>
+                        </td>
+                        <td style="text-align: center">{{ result.ecartScore }}</td>
+                        <td>
                             <img class="cursor-pointer" src="assets/icons/open_link.png" width="16" height="16"
                                  (click)="openReplay(result.idGame)" priority>
-                        </div>
-                    </td>
-                </tr>
-            </ng-template>
-        </p-table>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
     `,
     styles: `
     `

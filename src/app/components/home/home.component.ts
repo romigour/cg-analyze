@@ -3,6 +3,7 @@ import {FormsModule} from '@angular/forms';
 import {GridComponent} from "../grid/grid.component";
 import {SearchComponent} from "../search/search.component";
 import {InformationComponent} from "../information/information.component";
+import {FilterComponent} from "../filter/filter.component";
 
 @Component({
     selector: 'cg-home',
@@ -12,12 +13,14 @@ import {InformationComponent} from "../information/information.component";
         SearchComponent,
         GridComponent,
         InformationComponent,
+        FilterComponent,
     ],
     template: `
         <div class="flex flex-col h-full gap-4">
             <h1>CG Analyze</h1>
+            <cg-search></cg-search>
             <div class="grid grid-cols-2 gap-4">
-                <cg-search></cg-search>
+                <cg-filter></cg-filter>
                 <cg-information></cg-information>
             </div>
             <cg-grid></cg-grid>

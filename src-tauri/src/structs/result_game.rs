@@ -9,14 +9,11 @@ pub struct ResultGame {
     #[serde(rename = "idxGame")]
     pub idx_game: i32,
     pub status: Status,
+    pub warning: bool,
     pub position: i32,
-    #[serde(rename = "oppPseudo")]
-    pub opp_pseudo: String,
-    #[serde(rename = "oppRank")]
-    pub opp_rank: String,
-    #[serde(rename = "oppElo")]
-    pub opp_elo: String,
     pub opposants: Vec<Opposant>,
     #[serde(rename = "ecartScore")]
     pub ecart_score: f64,
+    pub stderr: Vec<String>,
+    pub stdout: Vec<String>,
 }
