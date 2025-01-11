@@ -23,7 +23,8 @@ import {SearchService} from '../../services/search.service';
         <p-card styleClass="h-full" header="Recherche">
             <div class="flex gap-4 pt-4">
                 <p-floatlabel variant="on" class="w-full">
-                    <input #input class="w-full" pInputText id="sessionHandle" minlength="40" maxlength="40" required
+                    <input #input class="w-full" pInputText id="sessionHandle" minlength="40" maxlength="40"
+                           required
                            #inputModel="ngModel" [(ngModel)]="sessionHandle" autocomplete="off"/>
                     <label for="sessionHandle">Test Session Handle</label>
                 </p-floatlabel>
