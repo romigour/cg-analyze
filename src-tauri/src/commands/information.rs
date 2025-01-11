@@ -10,7 +10,7 @@ pub fn get_information() -> Information {
     let player = CURRENT_PLAYER.lock().unwrap().clone().unwrap();
 
     let mut information = Information::default();
-    information.pseudo = player.nickname.clone();
+    information.pseudo = player.clone().nickname.unwrap().clone();
     information.total_game = result_game.len();
     information.total_win = result_game
         .iter()
@@ -29,6 +29,5 @@ pub fn get_information() -> Information {
         .filter(|result| result.status == Status::Timeout)
         .count();
 
-    println!("player {:?}", player);
     information
 }

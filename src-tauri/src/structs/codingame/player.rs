@@ -7,7 +7,7 @@ pub struct Player {
     pub position: i32,
     #[serde(rename = "userId")]
     pub user_id: u64,
-    pub nickname: String,
+    pub nickname: Option<String>,
     #[serde(rename = "publicHandle")]
     pub public_handle: String,
     pub avatar: Option<u64>,

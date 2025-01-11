@@ -55,7 +55,7 @@ async fn fetch_battles(session_handle: &str) -> Result<(), Box<dyn Error>> {
         let mut battles: Vec<Battle> = Vec::new();
 
         let size_battles = updated_battles.len();
-        println!("size {:?}", size_battles);
+
         for (i, battle) in updated_battles.iter().enumerate() {
             let idx = size_battles - i;
 
@@ -93,9 +93,10 @@ async fn fetch_battles(session_handle: &str) -> Result<(), Box<dyn Error>> {
 
 fn treatment(battles: Vec<Battle>, my_player: Player) {
     let mut results_game = Vec::new();
+
     battles
         .iter()
-        .filter(|battle| battle.clone().game.is_some())
+        .filter(|battle| battle.game.is_some())
         .for_each(|battle| {
             let opposants: Vec<Opposant> = battle
                 .clone()
@@ -114,7 +115,6 @@ fn treatment(battles: Vec<Battle>, my_player: Player) {
                     score: agent.clone().score,
                 })
                 .collect();
-
             let opt_agent: Option<Agent> = battle
                 .clone()
                 .game
@@ -125,7 +125,6 @@ fn treatment(battles: Vec<Battle>, my_player: Player) {
                 .map(|agent| agent.clone())
                 .next();
 
-            println!("opposants {:?}", opposants);
             let status_battle: Status;
 
             let position = battle
@@ -219,7 +218,6 @@ async fn fetch_game_data(game_id: u32) -> Result<Game, Box<dyn Error>> {
 
     if response.status().is_success() {
         let game: Game = response.json().await?;
-        println!("Game: {:?} -> {:?}", game.game_id, game.agents);
         Ok(game)
     } else {
         Err(Box::new(std::io::Error::new(

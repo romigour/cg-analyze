@@ -1,12 +1,19 @@
 import {Component, inject} from '@angular/core';
 import {FormsModule} from '@angular/forms';
 import {SearchService} from "../../services/search.service";
+import {FloatLabel} from "primeng/floatlabel";
+import {Card} from "primeng/card";
+import {SelectButton} from "primeng/selectbutton";
+import {InputText} from "primeng/inputtext";
 
 @Component({
     selector: 'cg-filter',
     imports: [
         FormsModule,
-
+        FloatLabel,
+        Card,
+        SelectButton,
+        InputText
 
     ],
     standalone: true,

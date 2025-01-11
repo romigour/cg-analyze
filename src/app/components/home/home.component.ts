@@ -27,6 +27,19 @@ import {FilterComponent} from "../filter/filter.component";
         </div>
     `,
     styles: `
+        .loader-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--p-surface-500);
+            opacity: 25%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999; /* Pour être au-dessus de tous les autres éléments */
+        }
     `
 })
 export class HomeComponent {
