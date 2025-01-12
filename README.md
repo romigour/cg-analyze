@@ -4,8 +4,8 @@
 
 Projet d'analyse des matchs codingame
 
-Il permet d’identifier facilement les matchs perdus, notamment en cas de timeouts, tout en affichant des messages
-d’avertissement. Il recherche également directement dans vos sorties standard (stdout) ou d’erreur (stderr) pour
+Il permet d’identifier facilement les matchs perdus, notamment en cas de timeouts, voir les matchs qui ont des warnings.
+Il recherche également directement dans vos sorties standard (stdout) ou d’erreur (stderr) pour
 détecter les messages spécifiques que vous auriez pu écrire dans certaines situations
 
 ## Technos
